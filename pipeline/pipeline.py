@@ -11,5 +11,6 @@ df = pd.DataFrame({"Day": [1, 2, 3], "Num_Passengers": [4, 5, 6]})
 df['Month'] = month # Adding a new column 'Month' with the value from command line argument
 print(df.head())
 
-df.to_parquet(f'/tmp/pipeline_output_month={month}.parquet', index=False)
+df.to_parquet(f'output_{month}.parquet')
 
+print(f'Pipeline for month={month} is done.')

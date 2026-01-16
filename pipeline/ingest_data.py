@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import click
 import pandas as pd
 from sqlalchemy import create_engine
 from tqdm.auto import tqdm
@@ -25,30 +26,24 @@ dtype = {
     "congestion_surcharge": "float64"
 }
 
-# PostgreSQL database credentials
-pg_user = 'root'                    # Your PostgreSQL username
-pg_password = 'root'                # Your PostgreSQL password
-pg_host = 'localhost'               # Database host (use 'host.docker.internal' if using Docker)
-pg_port = '5432'                    # Database port
-pg_db = 'ny_taxi'                   # Database name
+def load_data_to_sql(pg_user, pg_password, pg_host, pg_port, pg_db, year, month, target_table, chunksize):
+    # PostgreSQL database credentials
+    # Parameters for data downloads
 
-# Parameters for data downloads
-year = 2021
-month = 1
-prefix = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
+    prefix = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
 
-# Define the columns to parse as dates
-parse_dates = [
-    "tpep_pickup_datetime",
-    "tpep_dropoff_datetime"
-]
-
-def load_data_to_sql():
+    # Define the columns to parse as dates
+    parse_dates = [
+        "tpep_pickup_datetime",
+        "tpep_dropoff_datetime"
+    ]
+        
     # Create PostgreSQL engine
     engine = create_engine(f'postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_db}')
 
     # Create the table in PostgreSQL with an empty DataFrame for the schema
-    pd.DataFrame(columns=dtype.keys()).to_sql(name='yellow_taxi_data', con=engine, if_exists='replace', index=False)
+    columns = list(dtype.keys()) + parse_dates
+    pd.DataFrame(columns=columns).to_sql(name=target_table, con=engine, if_exists='replace', index=False)
 
     # Read the CSV file into a DataFrame, iterating in chunks
     df_iter = pd.read_csv(
@@ -56,18 +51,28 @@ def load_data_to_sql():
         dtype=dtype,
         parse_dates=parse_dates,
         iterator=True,
-        chunksize=100000
+        chunksize=chunksize
     )
 
     # Process each chunk of data and write to SQL
     for df_chunk in tqdm(df_iter, desc="Processing chunks"):
         print(f"Processing chunk: {df_chunk.shape}")
-        df_chunk.to_sql(name='yellow_taxi_data', con=engine, if_exists='append', index=False)
+        df_chunk.to_sql(name=target_table, con=engine, if_exists='append', index=False)
 
     print("Data loading complete!")
 
-def main():
-    load_data_to_sql()
+@click.command()
+@click.option('--pg-user', default='root', help='PostgreSQL username')
+@click.option('--pg-password', default='root', help='PostgreSQL password')
+@click.option('--pg-host', default='172.17.0.2', help='Database host')
+@click.option('--pg-port', default='5432', help='Database port')
+@click.option('--pg-db', default='ny_taxi', help='Database name')
+@click.option('--year', default=2021, type=int, help='Year for data')
+@click.option('--month', default=1, type=int, help='Month for data')
+@click.option('--table', default='yellow_taxi_data', help='Target table name')
+@click.option('--chunksize', default=100000, type=int, help='Chunk size for processing')
+def main(pg_user, pg_password, pg_host, pg_port, pg_db, year, month, table, chunksize):
+    load_data_to_sql(pg_user, pg_password, pg_host, pg_port, pg_db, year, month, table, chunksize)
 
 if __name__ == "__main__":
     main()

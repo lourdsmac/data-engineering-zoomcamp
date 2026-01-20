@@ -19,6 +19,7 @@ In this homework assignment, we will ingest Green Taxi data into a PostgreSQL da
 
    ```bash
    docker-compose up -d
+   ```
 
 
 ## Running the Script
@@ -36,7 +37,7 @@ In this homework assignment, we will ingest Green Taxi data into a PostgreSQL da
     ```bash
     SELECT COUNT(1) 
     FROM green_taxi 
-    WHERE trip_distance <= 1 AND lpep_pickup_datetime BETWEEN '2025-11-01' AND '2025-12-01';`
+    WHERE trip_distance <= 1 AND lpep_pickup_datetime BETWEEN '2025-11-01' AND '2025-12-01';
     ```
 
 2. Which was the pick up day with the longest trip distance? Only consider trips with trip_distance less than 100 miles.
@@ -84,6 +85,7 @@ In this homework assignment, we will ingest Green Taxi data into a PostgreSQL da
   INNER JOIN pu_largest_tip lt
   ON lt.largest_tip_amount = gt.tip_amount;
  ```
+
 
 
 

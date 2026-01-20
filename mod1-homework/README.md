@@ -1,4 +1,4 @@
-# Homework: Ingesting Green Taxi Data
+# Homework 1: Docker, SQL and Terraform for
 
 ## Overview
 
@@ -84,5 +84,6 @@ In this homework assignment, we will ingest Green Taxi data into a PostgreSQL da
   INNER JOIN pu_largest_tip lt
   ON lt.largest_tip_amount = gt.tip_amount;
  ```
+
 
 

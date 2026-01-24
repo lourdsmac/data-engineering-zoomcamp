@@ -154,13 +154,14 @@ FROM
 
 `terraform init`
 
-   -This command prepares your environment. It downloads necessary plugins and sets up the backend for storing your Terraform state.
+   - This command prepares your environment. It downloads necessary plugins and sets up the backend for storing your Terraform state.
 
 `terraform apply -auto-approve`
 
-   -This command creates or updates infrastructure based on your configuration. It Automatically applies changes without asking for confirmation.
+   - This command creates or updates infrastructure based on your configuration. It Automatically applies changes without asking for confirmation.
 
 `terraform destroy`
 
-   -This command cleans up everything. It completely removes all resources that were created.
+   - This command cleans up everything. It completely removes all resources that were created.
    
+

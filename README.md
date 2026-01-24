@@ -88,7 +88,7 @@ volumes:
 
 
 
-4. For the trips in November 2025, how many trips had a trip_distance of less than or equal to 1 mile ?
+3. For the trips in November 2025, how many trips had a trip_distance of less than or equal to 1 mile ?
 
 ```bash
     SELECT COUNT(1) 

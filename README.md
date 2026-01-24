@@ -152,21 +152,15 @@ FROM
 
 **Explanation:**
 
-`terraform init`: 
+`terraform init`
 
-Purpose: Prepares your environment.
+This command prepares your environment. It downloads necessary plugins and sets up the backend for storing your Terraform state.
 
-Actions: Downloads necessary plugins and sets up the backend for storing your Terraform state.
+`terraform apply -auto-approve`
 
-`terraform apply -auto-approve`:
+This command creates or updates infrastructure based on your configuration. It Automatically applies changes without asking for confirmation.
 
-Purpose: Creates or updates infrastructure based on your configuration.
+`terraform destroy`
 
-Actions: Automatically applies changes without asking for confirmation.
-
-`terraform destroy`:
-
-Purpose: Cleans up everything.
-
-Actions: Completely removes all resources that were created.
+This command cleans up everything. It completely removes all resources that were created.
    

@@ -57,29 +57,33 @@ The script includes several SQL queries to analyze the ingested data. Here are a
 ```bash
 services:
   db:
-    image: postgres:18
+    container_name: postgres
+    image: postgres:17-alpine
     environment:
-      POSTGRES_USER: "root"
-      POSTGRES_PASSWORD: "root"
-      POSTGRES_DB: "green_taxi"
-    volumes:
-      - green_taxi_postgres_data:/var/lib/postgresql
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'ny_taxi'
     ports:
-      - "5431:5432"
+      - '5433:5432'
+    volumes:
+      - vol-pgdata:/var/lib/postgresql/data
 
   pgadmin:
-    image: dpage/pgadmin4
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
     environment:
-      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
-      PGADMIN_DEFAULT_PASSWORD: "root"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      PGADMIN_DEFAULT_EMAIL: "pgadmin@pgadmin.com"
+      PGADMIN_DEFAULT_PASSWORD: "pgadmin"
     ports:
-      - "8085:80"
+      - "8080:80"
+    volumes:
+      - vol-pgadmin_data:/var/lib/pgadmin
 
 volumes:
-  green_taxi_postgres_data:
-  pgadmin_data:
+  vol-pgdata:
+    name: vol-pgdata
+  vol-pgadmin_data:
+    name: vol-pgadmin_data
  ```
 
 **Answer**: `db:5432`
@@ -165,5 +169,6 @@ FROM
 
    - This command cleans up everything. It completely removes all resources that were created.
    
+
 
 

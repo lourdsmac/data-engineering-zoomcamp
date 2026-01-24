@@ -148,6 +148,7 @@ FROM
 **Answer**: `Yorkville West`
 
 7. Which of the following sequences describes the Terraform workflow for: 1) Downloading plugins and setting up backend, 2) Generating and executing changes, 3) Removing all resources?
+
 **Answer**: `terraform init, terraform apply -auto-approve, terraform destroy`
 
 **Explanation:**
@@ -164,4 +165,5 @@ FROM
 
    - This command cleans up everything. It completely removes all resources that were created.
    
+
 

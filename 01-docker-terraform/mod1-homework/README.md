@@ -168,7 +168,15 @@ FROM
 `terraform destroy`
 
    - This command cleans up everything. It completely removes all resources that were created.
+
+
+## References
+
+[01-Docker and Terraform Module](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/01-docker-terraform)
+
+[Homework Instructions](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/cohorts/2026/01-docker-terraform/homework.md)
    
+
 
 
 

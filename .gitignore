@@ -211,3 +211,7 @@ __marimo__/
 /01-docker-terraform/terraform/keys/my-creds.json
 
 01-docker-terraform/terraform/.terraform/*
+
+.env
+secrets/
+keys/

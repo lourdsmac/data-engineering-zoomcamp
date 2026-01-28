@@ -27,14 +27,11 @@ The script includes several SQL queries to analyze the ingested data. Here are a
 
 1. Within the execution for Yellow Taxi data for the year 2020 and month 12: what is the uncompressed file size (i.e. the output file yellow_tripdata_2020-12.csv of the extract task)? 
 
-```bash
-   - id: log_file_size
-    type: io.kestra.plugin.core.log.Log
-    message: "The uncompressed file size is: {{ fileSize(outputs.extract.outputFiles[render(vars.file)]) }} bytes"
- ```
-<img width="693" height="176" alt="image" src="https://github.com/user-attachments/assets/5c26cd5c-bd7a-4fec-be27-118c794c2544" />
 
-**Answer**: `134.5 MiB`
+<img width="1564" height="471" alt="image" src="https://github.com/user-attachments/assets/54afd524-7d59-4cf4-98cc-663e03ac5aee" />
+
+
+**Answer**: `128.3 MiB`
 
 
 2. What is the rendered value of the variable file when the inputs taxi is set to green, year is set to 2020, and month is set to 04 during execution? 
@@ -103,6 +100,7 @@ The script includes several SQL queries to analyze the ingested data. Here are a
 
 [Homework Instructions](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/cohorts/2026/02-workflow-orchestration/homework.md)
    
+
 
 
 

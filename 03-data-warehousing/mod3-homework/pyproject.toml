@@ -1,0 +1,16 @@
+[project]
+name = "mod3-homework"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "google-cloud-storage>=3.9.0",
+    "pandas>=3.0.0",
+    "pyarrow>=23.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pgcli>=4.4.0",
+]

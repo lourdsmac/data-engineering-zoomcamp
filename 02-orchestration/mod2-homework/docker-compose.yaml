@@ -67,7 +67,7 @@ services:
       - /tmp/kestra-wd:/tmp/kestra-wd
       - ./secrets:/secrets:ro #to get the GCP secret in json
     environment:
-      GOOGLE_APPLICATION_CREDENTIALS: /secrets/gcp-sa.json  #to get the GCP secret in json
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/gcp-sa.json  #to get the GCP secret in json 
       KESTRA_CONFIGURATION: |
         datasources:
           postgres:

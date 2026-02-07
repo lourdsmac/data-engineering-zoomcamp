@@ -1,174 +1,108 @@
-### Homework: Orchestration 
+### Homework: ELT Datapipeline Homework
 
 ## Overview 
 
-In this homework assignment, we will ingest Green Taxi data into a PostgreSQL database using Python, Pandas, and SQLAlchemy. The provided script downloads data, processes it, and executes SQL queries to analyze the data. 
+In this homework assignment, we will create a datapipeline with the use of kestra for orchestration and load the data to GCP. 
 
 ## Project Structure 
-
-- ingest_data.py: The main script for extracting, loading, and processing the Green Taxi data.
-- docker-compose.yml: Configuration file for setting up the PostgreSQL database.
-
+<img width="1032" height="196" alt="image" src="https://github.com/user-attachments/assets/a2927a35-d30c-44b7-92cd-0c5705aa3e3c" />
 
 ## Instructions 
 
 ### Prerequisites
 - Docker and Docker Compose installed
-- Terraform
 
 ### Environment Setup 
 
 1. Run the Database
 
-   Start the PostgreSQL database by running:
+   Run the Data Pipeline database by exuecuting the following command:
 
 ```bash
    docker-compose up -d
 ```
 
-### Running the Script
- Once the database is running, execute the following command in your terminal to run the data ingestion script:
-
-```bash
-python ingest_data.py \
-  --pg-user=root \
-  --pg-pass=root \
-  --pg-host=localhost \
-  --pg-port=5431 \
-  --pg-db=green_taxi \
-  --year 2025 \
-  --month 11 \
-  --chunksize 1000
- ```
-
 ## Homework 
 The script includes several SQL queries to analyze the ingested data. Here are a few: 
 
-1. What's the version of pip in the python:3.13 image?
-```bash
-  docker run -it --entrypoint bash python:3.13
-  pip --version
- ```
-**Answer**: `25.3`
+1. Within the execution for Yellow Taxi data for the year 2020 and month 12: what is the uncompressed file size (i.e. the output file yellow_tripdata_2020-12.csv of the extract task)? 
 
 
-2. Given the docker-compose.yaml, what is the hostname and port that pgadmin should use to connect to the postgres database?
-
-```bash
-services:
-  db:
-    container_name: postgres
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'postgres'
-      POSTGRES_DB: 'ny_taxi'
-    ports:
-      - '5433:5432'
-    volumes:
-      - vol-pgdata:/var/lib/postgresql/data
-
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "pgadmin@pgadmin.com"
-      PGADMIN_DEFAULT_PASSWORD: "pgadmin"
-    ports:
-      - "8080:80"
-    volumes:
-      - vol-pgadmin_data:/var/lib/pgadmin
-
-volumes:
-  vol-pgdata:
-    name: vol-pgdata
-  vol-pgadmin_data:
-    name: vol-pgadmin_data
- ```
-
-**Answer**: `db:5432`
-
-**Explanation**:  pgAdmin should use hostname "db" because the service name in your docker-compose.yml becomes the container’s internal network hostname that other containers use, and it should use port 5432 because that is PostgreSQL’s default port which the Postgres server inside the container listens on.
+<img width="1564" height="471" alt="image" src="https://github.com/user-attachments/assets/54afd524-7d59-4cf4-98cc-663e03ac5aee" />
 
 
+**Answer**: `128.3 MiB`
 
-3. For the trips in November 2025, how many trips had a trip_distance of less than or equal to 1 mile ?
+
+2. What is the rendered value of the variable file when the inputs taxi is set to green, year is set to 2020, and month is set to 04 during execution? 
 
 ```bash
-    SELECT COUNT(1) 
-    FROM green_taxi 
-    WHERE trip_distance <= 1 AND lpep_pickup_datetime BETWEEN '2025-11-01' AND '2025-12-01';
+{{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv
  ```
 
-**Answer**: `8,007`
+**Answer**: `green_tripdata_2020-04.csv`
+
+3. How many rows are there for the Yellow Taxi data for all CSV files in the year 2020?
+
+```bash
+    SELECT COUNT(*)
+    FROM `zoomcamp.yellow_tripdata`
+    WHERE filename LIKE 'yellow_tripdata_2020%'
+ ```
+
+
+**Answer**: `24,648,499`
  
-4. Which was the pick up day with the longest trip distance? Only consider trips with trip_distance less than 100 miles.
-```bash
- SELECT lpep_pickup_datetime, trip_distance FROM green_taxi WHERE trip_distance <= 100 ORDER BY trip_distance DESC LIMIT 1;
- ```
-
-**Answer**: `2025-11-14`
-
-5. Which was the pickup zone with the largest total_amount (sum of all trips) on November 18th, 2025?
-
-```bash
-
-    SELECT z."Zone", SUM(gt.total_amount) 
-    FROM green_taxi AS gt 
-    INNER JOIN zones AS z 
-    ON CAST(gt."PULocationID" AS BIGINT) = z."LocationID" 
-    WHERE DATE(gt.lpep_pickup_datetime) = '2025-11-18' 
-    GROUP BY z."Zone" 
-    ORDER BY SUM(gt.total_amount) DESC 
-    LIMIT 1;
- ```
-**Answer**: `East Harlem North`
-
-6. For the passengers picked up in the zone named "East Harlem North" in November 2025, which was the drop off zone that had the largest tip?
-
-```bash
-WITH pu_largest_tip AS (
-  SELECT
-    MAX(gt.tip_amount) AS largest_tip_amount
-  FROM
-    green_taxi AS gt
-    INNER JOIN zones AS z
-      ON gt."PULocationID" = z."LocationID"
-  WHERE
-    z."Zone" = 'East Harlem North'
-    AND TO_CHAR(gt."lpep_pickup_datetime", 'YYYY-MM') = '2025-11'
-)
-SELECT
-  z."Zone" AS DO_Zone,
-  gt.tip_amount
-FROM
-  green_taxi gt
-  INNER JOIN zones z
-    ON gt."DOLocationID" = z."LocationID"
-  INNER JOIN pu_largest_tip lt
-    ON lt.largest_tip_amount = gt.tip_amount;
-
-```
-**Answer**: `Yorkville West`
-
-7. Which of the following sequences describes the Terraform workflow for: 1) Downloading plugins and setting up backend, 2) Generating and executing changes, 3) Removing all resources?
-
-**Answer**: `terraform init, terraform apply -auto-approve, terraform destroy`
-
-**Explanation:**
-
-`terraform init`
-
-   - This command prepares your environment. It downloads necessary plugins and sets up the backend for storing your Terraform state.
-
-`terraform apply -auto-approve`
-
-   - This command creates or updates infrastructure based on your configuration. It Automatically applies changes without asking for confirmation.
-
-`terraform destroy`
-
-   - This command cleans up everything. It completely removes all resources that were created.
+4.  How many rows are there for the Green Taxi data for all CSV files in the year 2020?
    
+```bash
+   SELECT COUNT(*)
+   FROM `zoomcamp.green_tripdata`
+   WHERE filename LIKE 'green_tripdata_2020%'
+ ```
+
+**Answer**: `1,734,051`
+
+5. How many rows are there for the Yellow Taxi data for the March 2021 CSV file?
+
+```bash
+    SELECT COUNT(*)
+    FROM `zoomcamp.yellow_tripdata`
+    WHERE filename LIKE 'yellow_tripdata_2021_03.csv%'
+ ```
+
+**Answer**: `1,925,152`
+
+6. How would you configure the timezone to New York in a Schedule trigger?
+
+```bash
+ triggers:
+  - id: green_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 9 1 * *"
+    timezone: America/New_York
+    inputs:
+      taxi: green
+
+  - id: yellow_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 10 1 * *"
+    timezone: America/New_York
+    inputs:
+      taxi: yellow
+```
+**Answer**: `Add a timezone property set to America/New_York in the Schedule trigger configuration`
+
+
+## References:
+
+[02-Workflow Orchestration Module](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/02-workflow-orchestration)
+
+[Homework Instructions](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/cohorts/2026/02-workflow-orchestration/homework.md)
+   
+
+
+
 
 
 

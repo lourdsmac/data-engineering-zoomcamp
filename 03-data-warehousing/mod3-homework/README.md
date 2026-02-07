@@ -4,8 +4,9 @@
 
 In this homework, we will create a datapipeline and use Bigquery for the data warehouse. 
 
-## Project Structure 
-<img width="1032" height="196" alt="image" src="https://github.com/user-attachments/assets/a2927a35-d30c-44b7-92cd-0c5705aa3e3c" />
+## Workflow
+<img width="195" height="484" alt="image" src="https://github.com/user-attachments/assets/1085e6e2-3976-405e-8f3e-6a662ea0e03f" />
+
 
 ## Instructions 
 
@@ -88,11 +89,11 @@ In this homework, we will create a datapipeline and use Bigquery for the data wa
       
       An external table in BigQuery:
       
-        - does NOT store data inside BigQuery
+      - does NOT store data inside BigQuery
       
-        - only stores metadata (schema + file locations)
+      - only stores metadata (schema + file locations)
 
-  - reads the actual data directly from Google Cloud Storage (GCS)
+      - reads the actual data directly from Google Cloud Storage (GCS)
 
 8. It is best practice in Big Query to always cluster your data:
 
@@ -115,3 +116,4 @@ In this homework, we will create a datapipeline and use Bigquery for the data wa
 [03-Data Warehouse](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/03-data-warehouse)
 
 [Homework Instructions](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/cohorts/2026/03-data-warehouse/homework.md)
+
